@@ -1,3 +1,14 @@
+# MineFinanceGroup compatibility fork
+
+The `laravel-13-php-85` branch retains the package name and namespace for the existing Processor admin extension.
+
+- Targets PHP 8.5 / Laravel 13 and PHPUnit 12.
+- Updates Symfony Console output signatures.
+- Adapts migration scaffold signatures, class placeholders, duplicate detection and post-create hooks to Laravel 13.
+- Regression tests under `tests/Compatibility` do not start a server or execute generated migrations.
+
+Upstream history and license are retained below.
+
 Helpers for laravel-admin
 =========================
 

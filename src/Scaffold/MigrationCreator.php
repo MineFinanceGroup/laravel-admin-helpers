@@ -30,15 +30,16 @@ class MigrationCreator extends BaseMigrationCreator
      */
     public function create($name, $path, $table = null, $create = true)
     {
-        $this->ensureMigrationDoesntAlreadyExist($name);
+        $this->ensureMigrationDoesntAlreadyExist($name, $path);
 
         $path = $this->getPath($name, $path);
 
         $stub = $this->files->get(__DIR__.'/stubs/create.stub');
 
-        $this->files->put($path, $this->populateStub($name, $stub, $table));
+        $stub = str_replace('DummyClass', $this->getClassName($name), $stub);
+        $this->files->put($path, $this->populateStub($stub, $table));
 
-        $this->firePostCreateHooks($table);
+        $this->firePostCreateHooks($table, $path);
 
         return $path;
     }
@@ -46,17 +47,16 @@ class MigrationCreator extends BaseMigrationCreator
     /**
      * Populate stub.
      *
-     * @param string $name
      * @param string $stub
      * @param string $table
      *
      * @return mixed
      */
-    protected function populateStub($name, $stub, $table)
+    protected function populateStub($stub, $table)
     {
         return str_replace(
-            ['DummyClass', 'DummyTable', 'DummyStructure'],
-            [$this->getClassName($name), $table, $this->bluePrint],
+            ['DummyTable', 'DummyStructure'],
+            [$table, $this->bluePrint],
             $stub
         );
     }

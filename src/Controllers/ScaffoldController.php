@@ -42,36 +42,36 @@ class ScaffoldController extends Controller
         try {
 
             // 1. Create model.
-            if (in_array('model', $request->get('create'))) {
-                $modelCreator = new ModelCreator($request->get('table_name'), $request->get('model_name'));
+            if (in_array('model', $request->input('create'))) {
+                $modelCreator = new ModelCreator($request->input('table_name'), $request->input('model_name'));
 
                 $paths['model'] = $modelCreator->create(
-                    $request->get('primary_key'),
-                    $request->get('timestamps') == 'on',
-                    $request->get('soft_deletes') == 'on'
+                    $request->input('primary_key'),
+                    $request->input('timestamps') == 'on',
+                    $request->input('soft_deletes') == 'on'
                 );
             }
 
             // 2. Create controller.
-            if (in_array('controller', $request->get('create'))) {
-                $paths['controller'] = (new ControllerCreator($request->get('controller_name')))
-                    ->create($request->get('model_name'), $request->get('fields'));
+            if (in_array('controller', $request->input('create'))) {
+                $paths['controller'] = (new ControllerCreator($request->input('controller_name')))
+                    ->create($request->input('model_name'), $request->input('fields'));
             }
 
             // 3. Create migration.
-            if (in_array('migration', $request->get('create'))) {
-                $migrationName = 'create_'.$request->get('table_name').'_table';
+            if (in_array('migration', $request->input('create'))) {
+                $migrationName = 'create_'.$request->input('table_name').'_table';
 
                 $paths['migration'] = (new MigrationCreator(app('files')))->buildBluePrint(
-                    $request->get('fields'),
-                    $request->get('primary_key', 'id'),
-                    $request->get('timestamps') == 'on',
-                    $request->get('soft_deletes') == 'on'
-                )->create($migrationName, database_path('migrations'), $request->get('table_name'));
+                    $request->input('fields'),
+                    $request->input('primary_key', 'id'),
+                    $request->input('timestamps') == 'on',
+                    $request->input('soft_deletes') == 'on'
+                )->create($migrationName, database_path('migrations'), $request->input('table_name'));
             }
 
             // 4. Run migrate.
-            if (in_array('migrate', $request->get('create'))) {
+            if (in_array('migrate', $request->input('create'))) {
                 Artisan::call('migrate');
                 $message = Artisan::output();
             }

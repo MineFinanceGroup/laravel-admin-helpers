@@ -30,7 +30,8 @@ class RouteController extends Controller
                 ];
 
                 $grid->method()->map(function ($method) use ($colors) {
-                    return "<span class=\"label bg-{$colors[$method]}\">$method</span>";
+                    $color = $colors[$method] ?? 'gray';
+                    return "<span class=\"label bg-{$color}\">$method</span>";
                 })->implode('&nbsp;');
 
                 $grid->uri()->display(function ($uri) {
